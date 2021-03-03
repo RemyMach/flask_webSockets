@@ -1,9 +1,9 @@
 from flask import Flask
 from flask_socketio import SocketIO, send, emit
-from decouple import config
+from settings import SECRET_KEY
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = config('SECRET_KEY')
+app.config['SECRET_KEY'] = SECRET_KEY
 socketio = SocketIO(app)
 
 @socketio.on('messsage')
