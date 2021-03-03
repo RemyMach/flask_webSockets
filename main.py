@@ -12,6 +12,14 @@ def handleMessage(msg):
     # on envoie à tous les clients graçe au broadcast = True
     send(msg, broadcast=True)
 
+@socketio.on('connect')
+def test_connect():
+    emit('my response', {'data': 'Connected'})
+
+@socketio.on('disconnect')
+def test_disconnect():
+    print('Client disconnected')
+
 
 def main():
     socketio.run(app)
