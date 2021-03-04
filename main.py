@@ -12,11 +12,9 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 def handle_message(message_received):
     message = Message(message_received)
     print("received message : {}".format(message.fieldMessage))
-    # on envoie à tous les clients graçe au broadcast = True
     robot_message = Message()
     robot_message.fieldMessage = "je suis un petit robot"
-    send(message.toJson(), broadcast=True)
-
+    robot_message.idUser = 1
     emit('newRobotMessage', robot_message.toJson())
 
 
