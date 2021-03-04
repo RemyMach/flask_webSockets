@@ -4,21 +4,17 @@ from settings import SECRET_KEY
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_KEY
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins='*')
 
-@socketio.on('messsage')
+@socketio.on('addMesssage')
 def handleMessage(msg):
     print("Message : ".format(msg))
     # on envoie à tous les clients graçe au broadcast = True
     send(msg, broadcast=True)
 
-@socketio.on('connect')
-def test_connect():
-    emit('my response', {'data': 'Connected'})
-
-@socketio.on('disconnect')
-def test_disconnect():
-    print('Client disconnected')
+@socketio.emit('pomme')
+def emitexemple():
+    emit('je suus une pomme', broadcast=False)
 
 
 def main():
