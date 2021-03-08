@@ -17,34 +17,26 @@ UsersConnected = {}
 
 @socketio.on('connect')
 def test_connect():
-    #count_user = 0
     currentSocketId = request.sid
-    print(currentSocketId)
-    chat_id = create_access_token(identity=datetime.timestamp(datetime.now()))
-    emit('firstConnection', {'data': {'message': 'You are connected', 'chat_id':chat_id}})
-    print("voici l'access token -> {} ".format(chat_id))
-    UsersConnected[chat_id] = {"connection": 1, "actif": True}
+    emit('firstConnection', {'data': {'message': 'You are connected', 'chat_id': currentSocketId}})
+    print("socket_id -> {} ".format(currentSocketId))
+    UsersConnected[currentSocketId] = 1
 
 @socketio.on('addMessage')
 def handle_message(data):
-    UsersConnected[data['chat_id']]['connection']  = UsersConnected[data['chat_id']]['connection'] + 1
+    UsersConnected[data['chat_id']]  = UsersConnected[data['chat_id']]+ 1
     message = Message({'fieldMessage': data['fieldMessage'] ,'idUser': data['idUser']})
-    emit('UsersConnected', UsersConnected[data['chat_id']]['connection'])
+    emit('UsersConnected', UsersConnected[data['chat_id']])
     print("received message : {}".format(message.fieldMessage))
     robot_message = Message()
     robot_message.fieldMessage = "je suis un petit robot"
     robot_message.idUser = 1
     emit('newRobotMessage', robot_message.toJson())
 
-@socketio.on('sendIdChatToSayChatIsUp')
-def ChatPingToSayItsUp(chat_id):
-    print("le chat est up")
-
 @socketio.on('disconnect')
 def test_disconnect():
     currentSocketId = request.sid
-    print(currentSocketId)
-    emit('disconnected_client', "There is a client that has been disconnected", broadcast=True)
+    del UsersConnected[currentSocketId]
     print('Client disconnected')
 
 
